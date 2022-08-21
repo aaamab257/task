@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,15 +30,16 @@ public class MainActivity extends AppCompatActivity {
     TicketViewModel viewModel ;
     private ArrayList<TicketModel> TicketsModelArrayList;
     TicketAdapter adapter ;
+    ProgressBar bar ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        bar = findViewById(R.id.prog_loader);
         viewModel  = ViewModelProviders.of(this).get(TicketViewModel.class);
         viewModel.getTickets();
         RecyclerView recTickets = findViewById(R.id.recycler);
-
+        bar.setVisibility(View.VISIBLE);
 
 
         viewModel.ticketsMutableLiveData.observe(this, new Observer<MainResponse>() {
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter = new TicketAdapter( mainModels.getData().getTicketstatus().get(0).getTickets());
                 recTickets.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                 recTickets.setAdapter(adapter);
+                bar.setVisibility(View.GONE);
             }
         });
     }
